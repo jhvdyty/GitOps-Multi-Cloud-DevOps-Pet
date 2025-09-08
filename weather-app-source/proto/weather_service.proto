@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package weather;
+
+service WeatherService {
+    rpc GetWeather(WeatherRequest) returns (WeatherResponse);
+    rpc HealthCheck(Empty) returns (HealthResponse);
+}
+
+message Empty {}
+
+message WeatherRequest {
+    string city = 1;
+}
+
+message WeatherResponse {
+    string city = 1;
+    WeatherData openweather = 2;
+    WeatherData weatherapi = 3;
+    string timestamp = 4;
+    SourceStatus status = 5;
+}
+
+message WeatherData {
+    double temperature = 1;
+    int32 humidity = 2;
+    double pressure = 3;
+    string description = 4;
+    double wind_speed = 5;
+    bool available = 6;
+}
+
+message SourceStatus {
+    string openweather = 1;
+    string weatherapi = 2;
+}
+
+message HealthResponse {
+    string status = 1;
+    string service = 2;
+}

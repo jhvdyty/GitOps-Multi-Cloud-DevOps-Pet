@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package analytics;
+
+service AnalyticsService {
+    rpc AnalyzeWeather(AnalyzeRequest) returns (AnalyzeResponse);
+    rpc GetHistory(HistoryRequest) returns (HistoryResponse);
+    rpc HealthCheck(Empty) returns (HealthResponse);
+}
+
+message Empty {}
+
+message AnalyzeRequest {
+    string city = 1;
+}
+
+message AnalyzeResponse {
+    string city = 1;
+    string analysis_time = 2;
+    int32 total_requests = 3;
+    CurrentWeather current_weather = 4;
+    repeated string insights = 5;
+    TemperatureTrend temperature_trend = 6;
+}
+
+message CurrentWeather {
+    double temperature = 1;
+    double humidity = 2;
+}
+
+message TemperatureTrend {
+    double current = 1;
+    double recent_average = 2;
+    int32 data_points = 3;
+}
+
+message HistoryRequest {
+    string city = 1;
+}
+
+message HistoryResponse {
+    string city = 1;
+    int32 total_records = 2;
+    repeated string history = 3;
+}
+
+message HealthResponse {
+    string status = 1;
+    string service = 2;
+}

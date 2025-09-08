@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  weather-aggregator:
+    build: ./services/weather-aggregator
+    ports:
+      - "5001:5001"
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - WEATHERAPI_KEY=${WEATHERAPI_KEY}
+    networks:
+      - weather-network
+
+  data-processor:
+    build: ./services/data-processor
+    ports:
+      - "5002:5002"
+    depends_on:
+      - weather-aggregator
+    networks:
+      - weather-network
+
+  analytics:
+    build: ./services/analytics
+    ports:
+      - "5003:5003"
+    depends_on:
+      - data-processor
+    networks:
+      - weather-network
+
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "5000:5000"
+    depends_on:
+      - weather-aggregator
+      - data-processor
+      - analytics
+    networks:
+      - weather-network
+
+networks:
+  weather-network:
+    driver: bridge

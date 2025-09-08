@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package dataprocessor;
+
+service DataProcessorService {
+    rpc ProcessWeatherData(ProcessRequest) returns (ProcessResponse);
+    rpc HealthCheck(Empty) returns (HealthResponse);
+}
+
+message Empty {}
+
+message ProcessRequest {
+    string city = 1;
+}
+
+message ProcessResponse {
+    string city = 1;
+    string processed_at = 2;
+    WeatherSummary weather_summary = 3;
+    Averages averages = 4;
+    DataSources data_sources = 5;
+}
+
+message WeatherSummary {
+    SourceData openweather = 1;
+    SourceData weatherapi = 2;
+}
+
+message SourceData {
+    double temperature = 1;
+    int32 humidity = 2;
+    double pressure = 3;
+    string description = 4;
+    double wind_speed = 5;
+}
+
+message Averages {
+    double temperature = 1;
+    double humidity = 2;
+}
+
+message DataSources {
+    string openweather = 1;
+    string weatherapi = 2;
+}
+
+message HealthResponse {
+    string status = 1;
+    string service = 2;
+}
