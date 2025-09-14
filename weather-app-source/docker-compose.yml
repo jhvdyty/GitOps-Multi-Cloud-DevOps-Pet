@@ -1,31 +1,38 @@
-version: '3.8'
-
 services:
   weather-aggregator:
     build: ./services/weather-aggregator
     ports:
-      - "5001:5001"
+      - "5001:5001"  # HTTP для health check
+      - "50051:50051"  # gRPC
     environment:
       - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
       - WEATHERAPI_KEY=${WEATHERAPI_KEY}
+    volumes:
+      - ./generated:/app/generated
     networks:
       - weather-network
 
   data-processor:
     build: ./services/data-processor
     ports:
-      - "5002:5002"
+      - "5002:5002"  # HTTP для health check
+      - "50052:50052"  # gRPC
     depends_on:
       - weather-aggregator
+    volumes:
+      - ./generated:/app/generated
     networks:
       - weather-network
 
   analytics:
     build: ./services/analytics
     ports:
-      - "5003:5003"
+      - "5003:5003"  # HTTP для health check
+      - "50053:50053"  # gRPC
     depends_on:
       - data-processor
+    volumes:
+      - ./generated:/app/generated
     networks:
       - weather-network
 
@@ -37,6 +44,8 @@ services:
       - weather-aggregator
       - data-processor
       - analytics
+    volumes:
+      - ./generated:/app/generated
     networks:
       - weather-network
 

@@ -2,7 +2,7 @@ import grpc
 from concurrent import futures
 import sys 
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../generated'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'generated'))
 
 import weather_service_pb2
 import weather_service_pb2_grpc
@@ -28,7 +28,7 @@ class WeatherService(weather_service_pb2_grpc.WeatherServiceServicer):
             openweather="success" if openweather_data.available else "failed",
             weatherapi="success" if weatherapi_data.available else "failed"
         )
-        
+         
         return weather_service_pb2.WeatherResponse(
             city=city,
             openweather=openweather_data,

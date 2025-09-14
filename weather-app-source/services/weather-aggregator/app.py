@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 import threading
 from grpc_server import serve
 
@@ -8,14 +8,14 @@ app = Flask(__name__)
 def health():
     return jsonify({"status": "healthy", "service": "weather-aggregator"})
 
-# запуск gRPC сервера в отдельном потоке
+# Запускаем gRPC сервер в отдельном потоке
 def start_grpc_server():
     serve()
 
 if __name__ == '__main__':
-    # gRPC сервер в фоне
+    # Запускаем gRPC сервер в фоне
     grpc_thread = threading.Thread(target=start_grpc_server, daemon=True)
     grpc_thread.start()
     
-    # Flask для health check
+    # Запускаем Flask для health check
     app.run(host='0.0.0.0', port=5001, debug=False)
